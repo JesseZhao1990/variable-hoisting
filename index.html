@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Variable-hoisting by JesseZhao1990</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Variable-hoisting</h1>
+      <h2 class="project-tagline">总结变量提升</h2>
+      <a href="https://github.com/JesseZhao1990/variable-hoisting" class="btn">View on GitHub</a>
+      <a href="https://github.com/JesseZhao1990/variable-hoisting/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/JesseZhao1990/variable-hoisting/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="变量提升" class="anchor" href="#%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>变量提升</h1>
+
+<p>变量提升也叫声明提升。是描述了这样一种现象：js在解析的时候总是会将var, function这类关键词的声明语句提升至该作用域的最顶部(注意：这里只会提升声明部分)</p>
+
+<p><strong>注意：“变量提升” 名词是随大流叫法，“变量提升” 改为 “标识符提升” 更准确</strong></p>
+
+<h2>
+<a id="1变量未声明直接使用会怎样" class="anchor" href="#1%E5%8F%98%E9%87%8F%E6%9C%AA%E5%A3%B0%E6%98%8E%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E4%BC%9A%E6%80%8E%E6%A0%B7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1.变量未声明直接使用会怎样？</h2>
+
+<p><a href="http://codepen.io/zhaojianxin/pen/VKbVOx?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn(){
+    console.log(a);
+}
+
+testFn();
+
+</code></pre>
+
+<p>很明显会报错：a 未定义
+Uncaught ReferenceError: a is not defined</p>
+
+<h2>
+<a id="2变量声明在末尾会怎么样" class="anchor" href="#2%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E5%9C%A8%E6%9C%AB%E5%B0%BE%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2.变量声明在末尾会怎么样？</h2>
+
+<p><a href="http://codepen.io/zhaojianxin/pen/yabGBO?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn(){
+    console.log(a);
+}
+
+testFn();
+
+var a;
+
+</code></pre>
+
+<p>没有报错，在控制台输出了undefined。</p>
+
+<h2>
+<a id="3变量声明在末尾并且赋值会怎么样" class="anchor" href="#3%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E%E5%9C%A8%E6%9C%AB%E5%B0%BE%E5%B9%B6%E4%B8%94%E8%B5%8B%E5%80%BC%E4%BC%9A%E6%80%8E%E4%B9%88%E6%A0%B7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3.变量声明在末尾并且赋值会怎么样？</h2>
+
+<p><a href="http://codepen.io/zhaojianxin/pen/LRyrEd?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn(){
+    console.log(a);
+}
+
+testFn();
+
+var a="i am here";
+
+</code></pre>
+
+<p>没有报错，在控制台同样输出了undefined。但是为什么没输出"i am here"呢？ 所以。2和3都用到了变量提升。在函数运行之前，先在作用域的顶端声明后边出现的变量。以上代码等于这样书写。</p>
+
+<pre><code>var a;
+function testFn(){
+    console.log(a);
+}
+
+testFn();
+
+a="i am here";
+
+</code></pre>
+
+<h2>
+<a id="4函数函数表达式同样存在变量提升标识符提升" class="anchor" href="#4%E5%87%BD%E6%95%B0%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%90%8C%E6%A0%B7%E5%AD%98%E5%9C%A8%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E6%A0%87%E8%AF%86%E7%AC%A6%E6%8F%90%E5%8D%87" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4.函数函数表达式同样存在变量提升（标识符提升）</h2>
+
+<p><a href="http://codepen.io/zhaojianxin/pen/YGVdWJ?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn() {
+    console.log(func); // undefined
+    var func = function() {};
+    console.log(func);  //function() {};
+}
+testFn();
+
+</code></pre>
+
+<p>但是此时。你想在开头使用后来声明的函数表达式是不行的。
+<a href="http://codepen.io/zhaojianxin/pen/pEPqPN?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn() {
+    func(); // 这里会报错。说func不是一个函数
+    var func = function() {};
+}
+testFn();
+
+</code></pre>
+
+<h2>
+<a id="5函数声明的名也会提升到当前作用域顶部不会存在4的函数未定义的情况" class="anchor" href="#5%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E7%9A%84%E5%90%8D%E4%B9%9F%E4%BC%9A%E6%8F%90%E5%8D%87%E5%88%B0%E5%BD%93%E5%89%8D%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%A1%B6%E9%83%A8%E4%B8%8D%E4%BC%9A%E5%AD%98%E5%9C%A84%E7%9A%84%E5%87%BD%E6%95%B0%E6%9C%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%83%85%E5%86%B5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5.函数声明的名也会提升到当前作用域顶部，不会存在4的函数未定义的情况</h2>
+
+<p><a href="http://codepen.io/zhaojianxin/pen/QKvzrN?editors=1111">演示地址</a></p>
+
+<pre><code>function testFn() {
+    func(); // 这里不会报错。正常使用
+    function func() {};
+}
+testFn();
+
+</code></pre>
+
+<p>变量提升（Hoisting），属于js语言当初设计的时候考虑把js做成灵活性的一种语言的考虑。但是现代的js程序越来越大，越来越复杂。这必然要求语言越来越规范化。so ES6 的 let/const 到来结束了，ES里除全局变量外，其它都使用 let/const，var 替换成 let 后变量提升就不复存在了。绝大部分的浏览器还没有实现ES6. 即使实现了也需要向下兼容。也需要掌握变量提升的技巧。因此，变量提升几乎在每家公司的面试题中都会涉及到。以下列出一些题目。以供练习。</p>
+
+<p>题1：</p>
+
+<pre><code>// 写出以下代码的运行结果
+ var tt = 'aa';   
+ function test(){
+
+       alert(tt);
+       var tt = 'dd';
+       alert(tt);    
+
+       }   
+  test();
+
+</code></pre>
+
+<p>题2：</p>
+
+<pre><code>var tt = 'aa';
+
+ function test(){
+  alert(tt);
+        }
+   test();
+
+</code></pre>
+
+<p>题3：</p>
+
+<pre><code>// 写出以下代码的运行结果
+var a = 1;
+function fn() {
+    if (!a) {
+        var a = 2;
+    }
+    alert(a); // ?
+}
+fn();
+
+</code></pre>
+
+<p>题4：</p>
+
+<pre><code>// 写出以下代码的运行结果
+var a = 1;
+function fn() {
+    a = 2;
+    return;
+    function a() {}
+}
+fn();
+alert(a); // ?
+
+</code></pre>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/JesseZhao1990/variable-hoisting">Variable-hoisting</a> is maintained by <a href="https://github.com/JesseZhao1990">JesseZhao1990</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
